@@ -9,6 +9,12 @@ on:
   schedule:
     - cron: '0 6 * * *'       # nightly at 06:00 UTC
 
+env:
+  # Opt into Node 24 for the JS actions (checkout, setup-node, upload-artifact,
+  # dorny/test-reporter). Silences the Node-20 deprecation warning ahead of the
+  # June 2026 default switchover.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 jobs:
   newman:
     runs-on: ubuntu-latest
@@ -21,7 +27,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'    # current LTS — the runtime Newman itself runs on
 
       - name: Install Newman + htmlextra
         run: npm install -g newman newman-reporter-htmlextra
@@ -33,7 +39,7 @@ jobs:
             -e ./QA.postman_environment.json \
             -d ./users.json \
             --env-var "token=${{ secrets.API_KEY }}" \
-            --delay-request 200 \
+            --delay-request 500 \
             --timeout-request 10000 \
             -r cli,htmlextra,junit \
             --reporter-htmlextra-export ./reports/report.html \
