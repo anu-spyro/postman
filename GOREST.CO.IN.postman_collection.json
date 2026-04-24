@@ -918,7 +918,12 @@
                   "pm.environment.set(\"modified_name\", modified_name);",
                   "pm.environment.set(\"modified_email\", modified_email);",
                   "pm.environment.set(\"modified_gender\", modified_gender);",
-                  "pm.environment.set(\"modified_status\", modified_status);"
+                  "pm.environment.set(\"modified_status\", modified_status);",
+                  "",
+                  "// Browser-like headers to reduce Cloudflare bot-challenge hits on CI runners",
+                  "pm.request.headers.upsert({ key: \"User-Agent\", value: \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\" });",
+                  "pm.request.headers.upsert({ key: \"Accept\", value: \"application/json\" });",
+                  "pm.request.headers.upsert({ key: \"Accept-Language\", value: \"en-US,en;q=0.9\" });"
                 ]
               }
             },
