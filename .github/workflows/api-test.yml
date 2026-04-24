@@ -1,0 +1,57 @@
+name: API Tests (Newman)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:          # manual trigger button in the Actions UI
+  schedule:
+    - cron: '0 6 * * *'       # nightly at 06:00 UTC
+
+jobs:
+  newman:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Newman + htmlextra
+        run: npm install -g newman newman-reporter-htmlextra
+
+      - name: Run collection
+        run: |
+          mkdir -p reports
+          newman run ./GOREST.CO.IN.postman_collection.json \
+            -e ./QA.postman_environment.json \
+            -d ./users.json \
+            --env-var "token=${{ secrets.API_KEY }}" \
+            --delay-request 200 \
+            --timeout-request 10000 \
+            -r cli,htmlextra,junit \
+            --reporter-htmlextra-export ./reports/report.html \
+            --reporter-htmlextra-title "API Tests - ${{ github.sha }}" \
+            --reporter-junit-export ./reports/junit.xml
+
+      - name: Upload HTML report
+        if: always()           # upload even when tests fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-html-report
+          path: ./reports/
+          retention-days: 14
+
+      - name: Publish JUnit results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Newman Results
+          path: ./reports/junit.xml
+          reporter: java-junit

@@ -1,0 +1,951 @@
+{
+  "info": {
+    "_postman_id": "2cca5a29-eefd-4a09-993d-b2580d0ad387",
+    "name": "GOREST.CO.IN",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52725247"
+  },
+  "item": [
+    {
+      "name": "/public/v2/users",
+      "item": [
+        {
+          "name": "positive flow",
+          "item": [
+            {
+              "name": "User",
+              "item": [
+                {
+                  "name": "create user with valid data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "",
+                          "// Parse response body",
+                          "const jsonData = pm.response.json();",
+                          "",
+                          "// 1. Assert status code is 201",
+                          "pm.test(\"Status code is 201\", function () {",
+                          "    pm.response.to.have.status(201);",
+                          "});",
+                          "",
+                          "// 2. Assert `id` exists and is a number",
+                          "pm.test(\"id exists and is a number\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"id\");",
+                          "    pm.expect(jsonData.id).to.be.a(\"number\");",
+                          "});",
+                          "",
+                          "// 3. Assert `name` exists, is a string, and equals env variable",
+                          "pm.test(\"name exists, is a string, and matches environment variable\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"name\");",
+                          "    pm.expect(jsonData.name).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"name\"));",
+                          "});",
+                          "",
+                          "// 4. Assert `email` exists, is a string, and equals env variable",
+                          "pm.test(\"email exists, is a string, and matches environment variable\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"email\");",
+                          "    pm.expect(jsonData.email).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.email).to.eql(pm.iterationData.get(\"email\"));",
+                          "});",
+                          "",
+                          "// 5. Assert `gender` exists, is a string, and equals env variable",
+                          "pm.test(\"gender exists, is a string, and matches environment variable\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"gender\");",
+                          "    pm.expect(jsonData.gender).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"gender\"));",
+                          "});",
+                          "",
+                          "// 6. Assert `status` exists, is a string, and equals env variable",
+                          "pm.test(\"status exists, is a string, and matches environment variable\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"status\");",
+                          "    pm.expect(jsonData.status).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"status\"));",
+                          "});",
+                          "",
+                          "// Save returned id to environment variable",
+                          "pm.environment.set(\"user_id\", jsonData.id);",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"name\": \"{{name}}\",\n    \"email\": \"{{email}}\",\n    \"gender\": \"{{gender}}\",\n    \"status\": \"{{status}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get user data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var jsonData = pm.response.json();",
+                          "",
+                          "pm.test(\"Status code is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"User name check\", function () {",
+                          "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"name\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User email check\", function () {",
+                          "    pm.expect(jsonData.email).to.eql(pm.iterationData.get(\"email\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User gender check\", function () {",
+                          "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"gender\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User status check\", function () {",
+                          "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"status\"));",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users/{{user_id}}",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users", "{{user_id}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "send duplicated user data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var jsonData = pm.response.json();",
+                          "",
+                          "pm.test(\"Status code is 422\", function () {",
+                          "    pm.response.to.have.status(422);",
+                          "});",
+                          "",
+                          "pm.test(\"field check\", function () {",
+                          "    pm.expect(jsonData[0].field).to.eql(\"email\");",
+                          "});",
+                          "",
+                          "pm.test(\"message check\", function () {",
+                          "    pm.expect(jsonData[0].message).to.eql(\"has already been taken\");",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"name\": \"{{name}}\",\n    \"email\": \"{{email}}\",\n    \"gender\": \"{{gender}}\",\n    \"status\": \"{{status}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "change user name only",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var jsonData = pm.response.json();",
+                          "var expectedUserId = Number(pm.environment.get(\"user_id\"));",
+                          "",
+                          "pm.test(\"Status code is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"id exists, is a number, and matches environment variable user_id\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"id\");",
+                          "    pm.expect(jsonData.id).to.be.a(\"number\");",
+                          "    pm.expect(jsonData.id).to.eql(expectedUserId);",
+                          "});",
+                          "",
+                          "pm.test(\"name exists, is a string, and matches environment variable\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"name\");",
+                          "    pm.expect(jsonData.name).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"modified_name\"));",
+                          "});",
+                          "",
+                          "pm.test(\"email exists, is a string, and matches environment variable email\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"email\");",
+                          "    pm.expect(jsonData.email).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.email).to.eql(pm.iterationData.get(\"email\"));",
+                          "});",
+                          "",
+                          "pm.test(\"gender exists, is a string, and matches environment variable gender\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"gender\");",
+                          "    pm.expect(jsonData.gender).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"gender\"));",
+                          "});",
+                          "",
+                          "pm.test(\"status exists, is a string, and matches environment variable status\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"status\");",
+                          "    pm.expect(jsonData.status).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"status\"));",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"name\": \"{{modified_name}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users/{{user_id}}",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users", "{{user_id}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get user data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var jsonData = pm.response.json();",
+                          "",
+                          "pm.test(\"Status code is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"User name check\", function () {",
+                          "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"modified_name\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User email check\", function () {",
+                          "    pm.expect(jsonData.email).to.eql(pm.iterationData.get(\"email\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User gender check\", function () {",
+                          "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"gender\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User status check\", function () {",
+                          "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"status\"));",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users/{{user_id}}",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users", "{{user_id}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "change user email only",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var jsonData = pm.response.json();",
+                          "var expectedUserId = Number(pm.environment.get(\"user_id\"));",
+                          "",
+                          "pm.test(\"Status code is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"id exists, is a number, and matches environment variable user_id\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"id\");",
+                          "    pm.expect(jsonData.id).to.be.a(\"number\");",
+                          "    pm.expect(jsonData.id).to.eql(expectedUserId);",
+                          "});",
+                          "",
+                          "pm.test(\"email exists, is a string, and matches environment variable modified_email\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"email\");",
+                          "    pm.expect(jsonData.email).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.email).to.eql(pm.iterationData.get(\"modified_email\"));",
+                          "});",
+                          "",
+                          "pm.test(\"name exists, is a string, and matches environment variable name\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"name\");",
+                          "    pm.expect(jsonData.name).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"modified_name\"));",
+                          "});",
+                          "",
+                          "pm.test(\"gender exists, is a string, and matches environment variable gender\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"gender\");",
+                          "    pm.expect(jsonData.gender).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"gender\"));",
+                          "});",
+                          "",
+                          "pm.test(\"status exists, is a string, and matches environment variable status\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"status\");",
+                          "    pm.expect(jsonData.status).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"status\"));",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "disabled": false
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"email\": \"{{modified_email}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users/{{user_id}}",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users", "{{user_id}}"]
+                    },
+                    "description": "PATCH request to update only the user's email."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get user data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var jsonData = pm.response.json();",
+                          "",
+                          "pm.test(\"Status code is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"User name check\", function () {",
+                          "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"modified_name\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User email check\", function () {",
+                          "    pm.expect(jsonData.email).to.eql(pm.iterationData.get(\"modified_email\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User gender check\", function () {",
+                          "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"gender\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User status check\", function () {",
+                          "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"status\"));",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users/{{user_id}}",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users", "{{user_id}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "change user gender only",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var jsonData = pm.response.json();",
+                          "var expectedUserId = Number(pm.environment.get(\"user_id\"));",
+                          "",
+                          "pm.test(\"Status code is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"id exists, is a number, and matches environment variable user_id\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"id\");",
+                          "    pm.expect(jsonData.id).to.be.a(\"number\");",
+                          "    pm.expect(jsonData.id).to.eql(expectedUserId);",
+                          "});",
+                          "",
+                          "pm.test(\"gender exists, is a string, and matches environment variable modified_gender\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"gender\");",
+                          "    pm.expect(jsonData.gender).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"modified_gender\"));",
+                          "});",
+                          "",
+                          "pm.test(\"name exists, is a string, and matches environment variable name\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"name\");",
+                          "    pm.expect(jsonData.name).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"modified_name\"));",
+                          "});",
+                          "",
+                          "pm.test(\"email exists, is a string, and matches environment variable email\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"email\");",
+                          "    pm.expect(jsonData.email).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.email).to.eql(pm.iterationData.get(\"modified_email\"));",
+                          "});",
+                          "",
+                          "pm.test(\"status exists, is a string, and matches environment variable status\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"status\");",
+                          "    pm.expect(jsonData.status).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"status\"));",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "disabled": false
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"gender\": \"{{modified_gender}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users/{{user_id}}",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users", "{{user_id}}"]
+                    },
+                    "description": "PATCH request to update only the user's gender."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get user data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var jsonData = pm.response.json();",
+                          "",
+                          "pm.test(\"Status code is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"User name check\", function () {",
+                          "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"modified_name\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User email check\", function () {",
+                          "    pm.expect(jsonData.email).to.eql(pm.iterationData.get(\"modified_email\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User gender check\", function () {",
+                          "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"modified_gender\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User status check\", function () {",
+                          "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"status\"));",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users/{{user_id}}",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users", "{{user_id}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "change user status only",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var jsonData = pm.response.json();",
+                          "var expectedUserId = Number(pm.environment.get(\"user_id\"));",
+                          "",
+                          "pm.test(\"Status code is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"id exists, is a number, and matches environment variable user_id\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"id\");",
+                          "    pm.expect(jsonData.id).to.be.a(\"number\");",
+                          "    pm.expect(jsonData.id).to.eql(expectedUserId);",
+                          "});",
+                          "",
+                          "pm.test(\"status exists, is a string, and matches environment variable modified_status\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"status\");",
+                          "    pm.expect(jsonData.status).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"modified_status\"));",
+                          "});",
+                          "",
+                          "pm.test(\"name exists, is a string, and matches environment variable name\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"name\");",
+                          "    pm.expect(jsonData.name).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"modified_name\"));",
+                          "});",
+                          "",
+                          "pm.test(\"email exists, is a string, and matches environment variable email\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"email\");",
+                          "    pm.expect(jsonData.email).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.email).to.eql(pm.iterationData.get(\"modified_email\"));",
+                          "});",
+                          "",
+                          "pm.test(\"gender exists, is a string, and matches environment variable gender\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"gender\");",
+                          "    pm.expect(jsonData.gender).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"modified_gender\"));",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "disabled": false
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"status\": \"{{modified_status}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users/{{user_id}}",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users", "{{user_id}}"]
+                    },
+                    "description": "PATCH request to update only the user's status."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get user data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var jsonData = pm.response.json();",
+                          "",
+                          "pm.test(\"Status code is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"User name check\", function () {",
+                          "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"modified_name\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User email check\", function () {",
+                          "    pm.expect(jsonData.email).to.eql(pm.iterationData.get(\"modified_email\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User gender check\", function () {",
+                          "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"modified_gender\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User status check\", function () {",
+                          "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"modified_status\"));",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users/{{user_id}}",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users", "{{user_id}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "change user data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var jsonData = pm.response.json();",
+                          "var expectedUserId = Number(pm.environment.get(\"user_id\"));",
+                          "",
+                          "pm.test(\"Status code is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"id exists, is a number, and matches environment variable user_id\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"id\");",
+                          "    pm.expect(jsonData.id).to.be.a(\"number\");",
+                          "    pm.expect(jsonData.id).to.eql(expectedUserId);",
+                          "});",
+                          "",
+                          "pm.test(\"status exists, is a string, and matches environment variable status\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"status\");",
+                          "    pm.expect(jsonData.status).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"status\"));",
+                          "});",
+                          "",
+                          "pm.test(\"name exists, is a string, and matches environment variable name\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"name\");",
+                          "    pm.expect(jsonData.name).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"name\"));",
+                          "});",
+                          "",
+                          "pm.test(\"email exists, is a string, and matches environment variable email\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"email\");",
+                          "    pm.expect(jsonData.email).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.email).to.eql(pm.iterationData.get(\"email\"));",
+                          "});",
+                          "",
+                          "pm.test(\"gender exists, is a string, and matches environment variable gender\", function () {",
+                          "    pm.expect(jsonData).to.have.property(\"gender\");",
+                          "    pm.expect(jsonData.gender).to.be.a(\"string\");",
+                          "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"gender\"));",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "disabled": false
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"name\": \"{{name}}\",\n    \"email\": \"{{email}}\",\n    \"gender\": \"{{gender}}\",\n    \"status\": \"{{status}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users/{{user_id}}",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users", "{{user_id}}"]
+                    },
+                    "description": "PATCH request to update only the user's status."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get user data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var jsonData = pm.response.json();",
+                          "",
+                          "pm.test(\"Status code is 200\", function () {",
+                          "    pm.response.to.have.status(200);",
+                          "});",
+                          "",
+                          "pm.test(\"User name check\", function () {",
+                          "    pm.expect(jsonData.name).to.eql(pm.iterationData.get(\"name\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User email check\", function () {",
+                          "    pm.expect(jsonData.email).to.eql(pm.iterationData.get(\"email\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User gender check\", function () {",
+                          "    pm.expect(jsonData.gender).to.eql(pm.iterationData.get(\"gender\"));",
+                          "});",
+                          "",
+                          "pm.test(\"User status check\", function () {",
+                          "    pm.expect(jsonData.status).to.eql(pm.iterationData.get(\"status\"));",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users/{{user_id}}",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users", "{{user_id}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete user",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 204\", function () {",
+                          "    pm.response.to.have.status(204);",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"name\": \"{{name}}\",\n    \"email\": \"{{email}}\",\n    \"gender\": \"{{gender}}\",\n    \"status\": \"{{status}}\"\n}"
+                    },
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users/{{user_id}}",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users", "{{user_id}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get user data",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var jsonData = pm.response.json();",
+                          "",
+                          "pm.test(\"Status code is 404\", function () {",
+                          "    pm.response.to.have.status(404);",
+                          "});",
+                          "",
+                          "pm.test(\"message check\", function () {",
+                          "    pm.expect(jsonData.message).to.eql(\"Resource not found\");",
+                          "});",
+                          "",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "https://{{base_url}}/public/v2/users/{{user_id}}",
+                      "protocol": "https",
+                      "host": ["{{base_url}}"],
+                      "path": ["public", "v2", "users", "{{user_id}}"]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ],
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "let name = \"Andy\";",
+                  "let email = \"andyAA@andyAA.com\";",
+                  "let gender = \"male\";",
+                  "let status = \"active\";",
+                  "",
+                  "let modified_name = \"Andrew\";",
+                  "let modified_email = \"andrewAA@andrewAA.com\"",
+                  "let modified_gender = \"female\";",
+                  "let modified_status = \"inactive\";",
+                  "",
+                  "pm.environment.set(\"name\", name);",
+                  "pm.environment.set(\"email\", email);",
+                  "pm.environment.set(\"gender\", gender);",
+                  "pm.environment.set(\"status\", status);",
+                  "",
+                  "pm.environment.set(\"modified_name\", modified_name);",
+                  "pm.environment.set(\"modified_email\", modified_email);",
+                  "pm.environment.set(\"modified_gender\", modified_gender);",
+                  "pm.environment.set(\"modified_status\", modified_status);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [""]
+              }
+            }
+          ]
+        },
+        {
+          "name": "negative flow",
+          "item": []
+        }
+      ]
+    },
+    {
+      "name": "/public/v2/posts",
+      "item": []
+    },
+    {
+      "name": "/public/v2/comments",
+      "item": []
+    }
+  ]
+}
