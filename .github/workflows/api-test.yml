@@ -6,8 +6,8 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:          # manual trigger button in the Actions UI
-  schedule:
-    - cron: '0 6 * * *'       # nightly at 06:00 UTC
+  # schedule:
+  #   - cron: '0 6 * * *'       # nightly at 06:00 UTC — disabled, runs on GitLab now
 
 env:
   # Opt into Node 24 for the JS actions (checkout, setup-node, upload-artifact,
